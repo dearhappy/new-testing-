@@ -20,18 +20,18 @@
         <h2 class="text-2xl font-bold mb-6 text-blue-600 border-b pb-2">Employee Registration</h2>
         
         <form id="onboardingForm">
-            <!-- Hidden Fields -->
-            <input type="hidden" name="Date of Joining" value="01-05-2019">
-            <input type="hidden" name="Designation" value="Area Manager">
-            <input type="hidden" name="Grade" value="M3">
-            <input type="hidden" name="Project Code" value="AMNS-01">
-            <input type="hidden" name="Gross Salary" value="69280">
-            <input type="hidden" name="Current Address" value="Hazira, Surat">
-            <input type="hidden" name="Work Location" value="Hazira">
-            <input type="hidden" name="Client Name" value="AMNS India">
-            <input type="hidden" name="PF Location" value="Gujarat">
-            <input type="hidden" name="UAN remarks" value="N/A">
-            <input type="hidden" name="ESI Remark" value="N/A">
+            <!-- Hidden Fields (Now Blank by Default) -->
+            <input type="hidden" name="Date of Joining" value="">
+            <input type="hidden" name="Designation" value="">
+            <input type="hidden" name="Grade" value="">
+            <input type="hidden" name="Project Code" value="">
+            <input type="hidden" name="Gross Salary" value="">
+            <input type="hidden" name="Current Address" value="">
+            <input type="hidden" name="Work Location" value="">
+            <input type="hidden" name="Client Name" value="">
+            <input type="hidden" name="PF Location" value="">
+            <input type="hidden" name="UAN remarks" value="">
+            <input type="hidden" name="ESI Remark" value="">
 
             <!-- STEP 1: Personal Information -->
             <div id="step1" class="step active">
@@ -95,7 +95,7 @@
         function updateChildrenFields() {
             const container = document.getElementById('childrenContainer');
             const count = parseInt(document.getElementById('numChildren').value) || 0;
-            const maxChildren = 3; // Based on Sheet Headers
+            const maxChildren = 3; 
             
             container.innerHTML = '';
             
@@ -157,21 +157,97 @@
         function generatePDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            const formData = new FormData(form);
+            const data = new FormData(form);
+            const get = (key) => data.get(key) || "________________";
+
+            // Header Section
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(22);
+            doc.text("EMPLOYEE JOINING FORM", 105, 20, { align: "center" });
             
-            doc.setFontSize(18);
-            doc.text("Employee Information Form", 20, 20);
+            doc.setLineWidth(0.5);
+            doc.line(20, 25, 190, 25);
+
+            // 1. Personal Details
+            doc.setFontSize(14);
+            doc.text("1. PERSONAL INFORMATION", 20, 35);
+            doc.setFont("helvetica", "normal");
             doc.setFontSize(10);
             
-            let y = 35;
-            formData.forEach((value, key) => {
-                if (value && y < 280) {
-                    doc.text(`${key}: ${value}`, 20, y);
-                    y += 7;
+            let y = 45;
+            const drawRow = (label1, val1, label2, val2) => {
+                doc.setFont("helvetica", "bold");
+                doc.text(label1 + ":", 20, y);
+                doc.setFont("helvetica", "normal");
+                doc.text(String(val1), 65, y);
+                
+                if (label2) {
+                    doc.setFont("helvetica", "bold");
+                    doc.text(label2 + ":", 110, y);
+                    doc.setFont("helvetica", "normal");
+                    doc.text(String(val2), 150, y);
                 }
-            });
+                y += 8;
+            };
+
+            drawRow("Full Name", get("Employee Name(AsperAadhar)"), "Date of Birth", get("Date of Birth"));
+            drawRow("Gender", get("Gender"), "Blood Group", get("Blood Group"));
+            drawRow("Marital Status", get("Marital Status"), "Contact No", get("Contact No"));
+            drawRow("Email ID", get("Email id"), "Education", get("Education"));
+            drawRow("Permanent Addr", get("Permanent Address"), "", "");
+
+            y += 5;
+            // 2. Statutory & Bank Details
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(14);
+            doc.text("2. STATUTORY & BANK DETAILS", 20, y);
+            y += 10;
+            doc.setFontSize(10);
+            drawRow("Aadhar No", get("AdharNo"), "PAN Number", get("Pan Number"));
+            drawRow("UAN Number", get("UAN Number"), "Bank Name", get("Bank Name"));
+            drawRow("Account No", get("Account No"), "IFSC Code", get("IFSC Code"));
             
-            doc.save(`Form_${formData.get('Employee Name(AsperAadhar)') || 'Employee'}.pdf`);
+            y += 5;
+            // 3. Family Details
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(14);
+            doc.text("3. FAMILY DETAILS", 20, y);
+            y += 10;
+            doc.setFontSize(10);
+            drawRow("Father's Name", get("Father name"), "Mother's Name", get("Mother Name"));
+            drawRow("Wife's Name", get("Wife Name"), "Marriage Date", get("Date of Marriage"));
+            
+            const numChildren = parseInt(data.get("No.Childrens")) || 0;
+            if (numChildren > 0) {
+                y += 2;
+                doc.setFont("helvetica", "italic");
+                doc.text("Children Details:", 20, y);
+                y += 8;
+                for (let i = 1; i <= Math.min(numChildren, 3); i++) {
+                    drawRow(`Child ${i} Name`, get(`Child ${i} Name`), `DOB/Gender`, `${get(`Child ${i} DOB`)} / ${get(`Son/Daughter`)}`);
+                }
+            }
+
+            y += 10;
+            // 4. Experience & Emergency
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(14);
+            doc.text("4. EMERGENCY & EXPERIENCE", 20, y);
+            y += 10;
+            doc.setFontSize(10);
+            drawRow("Emergency Contact", get("Emergency Contact No"), "Relation", get("Employee Relationwith EmergencyContactNo"));
+            drawRow("Experience", get("Scaffolding Work Experience") + " Years", "", "");
+
+            // Footer
+            y = 260;
+            doc.line(20, y, 70, y);
+            doc.line(140, y, 190, y);
+            y += 5;
+            doc.setFontSize(9);
+            doc.text("Employee Signature", 35, y, { align: "center" });
+            doc.text("Authorized Signatory", 165, y, { align: "center" });
+
+            doc.save(`Joining_Form_${data.get('Employee Name(AsperAadhar)') || 'Employee'}.pdf`);
         }
     </script>
 </body>
