@@ -10,6 +10,8 @@
         .step { display: none; }
         .step.active { display: block; }
         input, select { border: 1px solid #d1d5db; padding: 0.5rem; border-radius: 0.375rem; width: 100%; }
+        label { display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.25rem; }
+        .child-box { background-color: #f9fafb; padding: 1rem; border-radius: 0.5rem; border: 1px dashed #cbd5e1; }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen p-4 flex items-center justify-center">
@@ -18,7 +20,7 @@
         <h2 class="text-2xl font-bold mb-6 text-blue-600 border-b pb-2">Employee Registration</h2>
         
         <form id="onboardingForm">
-            <!-- Hidden Fields (Required by Sheet but hidden from UI) -->
+            <!-- Hidden Fields -->
             <input type="hidden" name="Date of Joining" value="01-05-2019">
             <input type="hidden" name="Designation" value="Area Manager">
             <input type="hidden" name="Grade" value="M3">
@@ -63,8 +65,12 @@
                     <div><label>Mother's Name</label><input type="text" name="Mother Name"></div>
                     <div><label>Wife's Name</label><input type="text" name="Wife Name"></div>
                     <div><label>Date of Marriage</label><input type="date" name="Date of Marriage"></div>
-                    <div><label>No. of Children</label><input type="number" name="No.Childrens"></div>
-                    <div><label>Child 1 Name</label><input type="text" name="Child 1 Name"></div>
+                    <div><label>No. of Children</label><input type="number" name="No.Childrens" id="numChildren" min="0" max="3" oninput="updateChildrenFields()"></div>
+                    <div class="hidden md:block"></div> <!-- Spacer -->
+                    
+                    <!-- Dynamic Children Container -->
+                    <div id="childrenContainer" class="col-span-full space-y-4 mt-2"></div>
+
                     <div><label>Email ID</label><input type="email" name="Email id"></div>
                     <div><label>Education</label><input type="text" name="Education"></div>
                     <div><label>Experience (Years)</label><input type="number" name="Scaffolding Work Experience"></div>
@@ -78,12 +84,45 @@
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwn1oDVHfFgKqMJfkguVyGxuY7WO5z9yupblXVc4J2zfiMZF6AJITZOWAZDJ3To-j0gBQ/exec'; // Replace with your Web App URL
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwn1oDVHfFgKqMJfkguVyGxuY7WO5z9yupblXVc4J2zfiMZF6AJITZOWAZDJ3To-j0gBQ/exec'; 
         const form = document.getElementById('onboardingForm');
 
         function nextStep(step) {
             document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
             document.getElementById('step' + step).classList.add('active');
+        }
+
+        function updateChildrenFields() {
+            const container = document.getElementById('childrenContainer');
+            const count = parseInt(document.getElementById('numChildren').value) || 0;
+            const maxChildren = 3; // Based on Sheet Headers
+            
+            container.innerHTML = '';
+            
+            for (let i = 1; i <= Math.min(count, maxChildren); i++) {
+                const childDiv = document.createElement('div');
+                childDiv.className = 'child-box grid grid-cols-1 md:grid-cols-3 gap-3';
+                childDiv.innerHTML = `
+                    <div class="col-span-full font-bold text-gray-600 text-xs uppercase tracking-wider">Child ${i} Details</div>
+                    <div>
+                        <label>Child ${i} Name</label>
+                        <input type="text" name="Child ${i} Name">
+                    </div>
+                    <div>
+                        <label>Son/Daughter</label>
+                        <select name="Son/Daughter">
+                            <option value="">Select</option>
+                            <option value="Son">Son</option>
+                            <option value="Daughter">Daughter</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Child ${i} DOB</label>
+                        <input type="date" name="Child ${i} DOB">
+                    </div>
+                `;
+                container.appendChild(childDiv);
+            }
         }
 
         form.addEventListener('submit', e => {
@@ -99,6 +138,7 @@
                         generatePDF();
                         alert('Data saved successfully. Your PDF is downloading.');
                         form.reset();
+                        document.getElementById('childrenContainer').innerHTML = '';
                         nextStep(1);
                     } else {
                         throw new Error('Server error');
@@ -121,13 +161,13 @@
             
             doc.setFontSize(18);
             doc.text("Employee Information Form", 20, 20);
-            doc.setFontSize(12);
+            doc.setFontSize(10);
             
             let y = 35;
             formData.forEach((value, key) => {
                 if (value && y < 280) {
                     doc.text(`${key}: ${value}`, 20, y);
-                    y += 8;
+                    y += 7;
                 }
             });
             
