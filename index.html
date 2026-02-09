@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Information Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        .step { display: none; }
+        .step.active { display: block; }
+        input, select { border: 1px solid #d1d5db; padding: 0.5rem; border-radius: 0.375rem; width: 100%; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-4 flex items-center justify-center">
+
+    <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-2xl">
+        <h2 class="text-2xl font-bold mb-6 text-blue-600 border-b pb-2">Employee Registration</h2>
+        
+        <form id="onboardingForm">
+            <!-- Hidden Fields (Required by Sheet but hidden from UI) -->
+            <input type="hidden" name="Date of Joining" value="01-05-2019">
+            <input type="hidden" name="Designation" value="Area Manager">
+            <input type="hidden" name="Grade" value="M3">
+            <input type="hidden" name="Project Code" value="AMNS-01">
+            <input type="hidden" name="Gross Salary" value="69280">
+            <input type="hidden" name="Current Address" value="Hazira, Surat">
+            <input type="hidden" name="Work Location" value="Hazira">
+            <input type="hidden" name="Client Name" value="AMNS India">
+            <input type="hidden" name="PF Location" value="Gujarat">
+            <input type="hidden" name="UAN remarks" value="N/A">
+            <input type="hidden" name="ESI Remark" value="N/A">
+
+            <!-- STEP 1: Personal Information -->
+            <div id="step1" class="step active">
+                <h3 class="text-lg font-semibold mb-4 text-gray-700">Part 1: Personal & Bank Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label>Employee Name (Aadhar)</label><input type="text" name="Employee Name(AsperAadhar)"></div>
+                    <div><label>Date of Birth</label><input type="date" name="Date of Birth"></div>
+                    <div><label>Gender</label><select name="Gender"><option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option></select></div>
+                    <div><label>Blood Group</label><input type="text" name="Blood Group"></div>
+                    <div><label>Marital Status</label><select name="Marital Status"><option value="">Select</option><option value="Single">Single</option><option value="Married">Married</option></select></div>
+                    <div><label>Permanent Address</label><input type="text" name="Permanent Address"></div>
+                    <div><label>Contact No</label><input type="tel" name="Contact No"></div>
+                    <div><label>Emergency Contact No</label><input type="tel" name="Emergency Contact No"></div>
+                    <div><label>Bank Name</label><input type="text" name="Bank Name"></div>
+                    <div><label>Account No</label><input type="text" name="Account No"></div>
+                    <div><label>IFSC Code</label><input type="text" name="IFSC Code"></div>
+                    <div><label>UAN Number</label><input type="text" name="UAN Number"></div>
+                    <div><label>Aadhar No</label><input type="text" name="AdharNo"></div>
+                    <div><label>PAN Number</label><input type="text" name="Pan Number"></div>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button type="button" onclick="nextStep(2)" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Next: Family Details</button>
+                </div>
+            </div>
+
+            <!-- STEP 2: Family Information -->
+            <div id="step2" class="step">
+                <h3 class="text-lg font-semibold mb-4 text-gray-700">Part 2: Family & Experience</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label>Father's Name</label><input type="text" name="Father name"></div>
+                    <div><label>Mother's Name</label><input type="text" name="Mother Name"></div>
+                    <div><label>Wife's Name</label><input type="text" name="Wife Name"></div>
+                    <div><label>Date of Marriage</label><input type="date" name="Date of Marriage"></div>
+                    <div><label>No. of Children</label><input type="number" name="No.Childrens"></div>
+                    <div><label>Child 1 Name</label><input type="text" name="Child 1 Name"></div>
+                    <div><label>Email ID</label><input type="email" name="Email id"></div>
+                    <div><label>Education</label><input type="text" name="Education"></div>
+                    <div><label>Experience (Years)</label><input type="number" name="Scaffolding Work Experience"></div>
+                </div>
+                <div class="mt-6 flex justify-between">
+                    <button type="button" onclick="nextStep(1)" class="bg-gray-400 text-white px-6 py-2 rounded-lg hover:bg-gray-500">Back</button>
+                    <button type="submit" id="submitBtn" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">Submit & Download PDF</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE'; // Replace with your Web App URL
+        const form = document.getElementById('onboardingForm');
+
+        function nextStep(step) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step' + step).classList.add('active');
+        }
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Processing...";
+
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(response => response.json())
+                .then(data => {
+                    if(data.result === 'success') {
+                        generatePDF();
+                        alert('Data saved successfully. Your PDF is downloading.');
+                        form.reset();
+                        nextStep(1);
+                    } else {
+                        throw new Error('Server error');
+                    }
+                })
+                .catch(error => {
+                    alert('Error submitting form. Please check Script URL.');
+                    console.error('Error!', error.message);
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Submit & Download PDF";
+                });
+        });
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const formData = new FormData(form);
+            
+            doc.setFontSize(18);
+            doc.text("Employee Information Form", 20, 20);
+            doc.setFontSize(12);
+            
+            let y = 35;
+            formData.forEach((value, key) => {
+                if (value && y < 280) {
+                    doc.text(`${key}: ${value}`, 20, y);
+                    y += 8;
+                }
+            });
+            
+            doc.save(`Form_${formData.get('Employee Name(AsperAadhar)') || 'Employee'}.pdf`);
+        }
+    </script>
+</body>
+</html>
