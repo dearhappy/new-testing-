@@ -21,7 +21,7 @@
 </head>
 <body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
 
-    <div class="glass-card w-full max-w-3xl rounded-2xl shadow-2xl p-6 md:p-10 animate__animated animate__fadeIn">
+    <div class="glass-card w-full max-w-4xl rounded-2xl shadow-2xl p-6 md:p-10 animate__animated animate__fadeIn">
         
         <!-- Header & Stepper -->
         <div class="mb-10">
@@ -42,8 +42,7 @@
         </div>
 
         <form id="onboardingForm" class="space-y-6">
-            <!-- Hidden Fields (Blank) -->
-            <input type="hidden" name="Date of Joining" value="">
+            <!-- Hidden Fields (Required for Google Sheet only, Blank on Web/PDF) -->
             <input type="hidden" name="Designation" value="">
             <input type="hidden" name="Grade" value="">
             <input type="hidden" name="Project Code" value="">
@@ -55,48 +54,90 @@
             <input type="hidden" name="UAN remarks" value="">
             <input type="hidden" name="ESI Remark" value="">
 
-            <!-- STEP 1 -->
+            <!-- STEP 1: Personal & Bank Details -->
             <div id="step1" class="step active">
                 <h3 class="text-xl font-bold mb-6 text-slate-700">01. Personal & Bank Details</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div><label class="text-xs font-bold text-slate-500 uppercase">Employee Name (Aadhar)</label><input type="text" name="Employee Name(AsperAadhar)" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Date of Joining</label><input type="date" name="Date of Joining" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
                     <div><label class="text-xs font-bold text-slate-500 uppercase">Date of Birth</label><input type="date" name="Date of Birth" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    
                     <div><label class="text-xs font-bold text-slate-500 uppercase">Gender</label><select name="Gender" class="input-focus w-full px-4 py-2 border rounded-xl"><option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Blood Group</label><input type="text" name="Blood Group" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Marital Status</label><select name="Marital Status" class="input-focus w-full px-4 py-2 border rounded-xl"><option value="">Select</option><option value="Single">Single</option><option value="Married">Married</option></select></div>
+                    
+                    <div class="md:col-span-2"><label class="text-xs font-bold text-slate-500 uppercase">Permanent Address</label><input type="text" name="Permanent Address" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">State</label><input type="text" name="State" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    
                     <div><label class="text-xs font-bold text-slate-500 uppercase">Contact No</label><input type="tel" name="Contact No" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Email id</label><input type="email" name="Email id" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
                     <div><label class="text-xs font-bold text-slate-500 uppercase">Aadhar No</label><input type="text" name="AdharNo" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">PAN Number</label><input type="text" name="Pan Number" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">UAN Number</label><input type="text" name="UAN Number" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">ESI No/ WC POLICY</label><input type="text" name="ESI No/ WC POLICY" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+
+                    <div class="md:col-span-3 h-px bg-slate-200 my-2"></div>
+
                     <div><label class="text-xs font-bold text-slate-500 uppercase">Bank Name</label><input type="text" name="Bank Name" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
                     <div><label class="text-xs font-bold text-slate-500 uppercase">Account No</label><input type="text" name="Account No" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
                     <div><label class="text-xs font-bold text-slate-500 uppercase">IFSC Code</label><input type="text" name="IFSC Code" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
                 </div>
-                <div class="mt-8 flex justify-end"><button type="button" onclick="nextStep(2)" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold">Next Part</button></div>
+                <div class="mt-8 flex justify-end"><button type="button" onclick="nextStep(2)" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors">Next Part</button></div>
             </div>
 
-            <!-- STEP 2 -->
+            <!-- STEP 2: Family & Experience -->
             <div id="step2" class="step">
                 <h3 class="text-xl font-bold mb-6 text-slate-700">02. Family & Experience</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><label class="text-xs font-bold text-slate-500 uppercase">Father's Name</label><input type="text" name="Father name" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div class="p-4 bg-slate-50 rounded-xl space-y-3">
+                        <p class="text-xs font-bold text-blue-600 uppercase border-b pb-1">Parental Details</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="text-[10px] font-bold text-slate-500 uppercase">Father's Name</label><input type="text" name="Father name" class="w-full p-2 text-sm border rounded-lg"></div>
+                            <div><label class="text-[10px] font-bold text-slate-500 uppercase">Father DOB</label><input type="date" name="Father Date of Birth" class="w-full p-2 text-sm border rounded-lg"></div>
+                            <div><label class="text-[10px] font-bold text-slate-500 uppercase">Mother Name</label><input type="text" name="Mother Name" class="w-full p-2 text-sm border rounded-lg"></div>
+                            <div><label class="text-[10px] font-bold text-slate-500 uppercase">Mother DOB</label><input type="date" name="Mother Date of Birth" class="w-full p-2 text-sm border rounded-lg"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-slate-50 rounded-xl space-y-3">
+                        <p class="text-xs font-bold text-blue-600 uppercase border-b pb-1">Spouse Details</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="text-[10px] font-bold text-slate-500 uppercase">Wife Name</label><input type="text" name="Wife Name" class="w-full p-2 text-sm border rounded-lg"></div>
+                            <div><label class="text-[10px] font-bold text-slate-500 uppercase">Wife DOB</label><input type="date" name="Wife Date of Birth" class="w-full p-2 text-sm border rounded-lg"></div>
+                            <div class="col-span-2"><label class="text-[10px] font-bold text-slate-500 uppercase">Date of Marriage</label><input type="date" name="Date of Marriage" class="w-full p-2 text-sm border rounded-lg"></div>
+                        </div>
+                    </div>
+
                     <div><label class="text-xs font-bold text-slate-500 uppercase">No. of Children</label><input type="number" name="No.Childrens" id="numChildren" min="0" max="3" oninput="updateChildrenFields()" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
-                    <div id="childrenContainer" class="col-span-full space-y-4"></div>
-                    <div><label class="text-xs font-bold text-slate-500 uppercase">Experience (Years)</label><input type="number" name="Scaffolding Work Experience" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
-                    <div><label class="text-xs font-bold text-slate-500 uppercase">Emergency Contact</label><input type="tel" name="Emergency Contact No" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div id="childrenContainer" class="col-span-full grid grid-cols-1 md:grid-cols-3 gap-3"></div>
+
+                    <div class="p-4 bg-slate-50 rounded-xl space-y-3 col-span-full">
+                        <p class="text-xs font-bold text-blue-600 uppercase border-b pb-1">Emergency Contact Information</p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div><label class="text-[10px] font-bold text-slate-500 uppercase">Name of Contact</label><input type="text" name="Name of Emergency Contact" class="w-full p-2 text-sm border rounded-lg"></div>
+                            <div><label class="text-[10px] font-bold text-slate-500 uppercase">Emergency No</label><input type="tel" name="Emergency Contact No" class="w-full p-2 text-sm border rounded-lg"></div>
+                            <div><label class="text-[10px] font-bold text-slate-500 uppercase">Relationship</label><input type="text" name="Employee Relationwith EmergencyContactNo" class="w-full p-2 text-sm border rounded-lg"></div>
+                        </div>
+                    </div>
+
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Education</label><input type="text" name="Education" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Work Experience (Years)</label><input type="number" name="Scaffolding Work Experience" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
                 </div>
-                <div class="mt-8 flex justify-between"><button type="button" onclick="nextStep(1)" class="text-slate-500">Back</button><button type="button" onclick="nextStep(3)" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold">Next: Upload Docs</button></div>
+                <div class="mt-8 flex justify-between"><button type="button" onclick="nextStep(1)" class="text-slate-500 font-semibold">Back</button><button type="button" onclick="nextStep(3)" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-blue-200">Next: Upload Docs</button></div>
             </div>
 
-            <!-- STEP 3 -->
+            <!-- STEP 3: Documents Upload -->
             <div id="step3" class="step">
                 <h3 class="text-xl font-bold mb-6 text-slate-700">03. Documents Upload</h3>
-                <p class="text-sm text-slate-500 mb-4">Upload clear photos or scans of your documents.</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div><label class="text-xs font-bold text-slate-500 uppercase">Aadhar Front</label><input type="file" id="file_aadhar_front" class="p-2 border w-full rounded-lg"></div>
-                    <div><label class="text-xs font-bold text-slate-500 uppercase">Aadhar Back</label><input type="file" id="file_aadhar_back" class="p-2 border w-full rounded-lg"></div>
-                    <div><label class="text-xs font-bold text-slate-500 uppercase">Bank Passbook</label><input type="file" id="file_bank" class="p-2 border w-full rounded-lg"></div>
-                    <div><label class="text-xs font-bold text-slate-500 uppercase">Passport Size Photo</label><input type="file" id="file_photo" class="p-2 border w-full rounded-lg"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Aadhar Front</label><input type="file" id="file_aadhar_front" class="p-2 border w-full rounded-lg bg-white"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Aadhar Back</label><input type="file" id="file_aadhar_back" class="p-2 border w-full rounded-lg bg-white"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Bank Passbook</label><input type="file" id="file_bank" class="p-2 border w-full rounded-lg bg-white"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase mb-2 block">Passport Size Photo</label><input type="file" id="file_photo" class="p-2 border w-full rounded-lg bg-white"></div>
                 </div>
                 <div class="mt-10 flex justify-between items-center">
-                    <button type="button" onclick="nextStep(2)" class="text-slate-500">Back</button>
-                    <button type="submit" id="submitBtn" class="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg flex items-center">
+                    <button type="button" onclick="nextStep(2)" class="text-slate-500 font-semibold">Back</button>
+                    <button type="submit" id="submitBtn" class="bg-emerald-600 text-white px-10 py-3 rounded-xl font-bold shadow-lg hover:bg-emerald-700 transition-all flex items-center">
                         <span id="btnText">Submit & Finish</span>
                         <div id="loader" class="hidden ml-3 w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     </button>
@@ -120,6 +161,7 @@
                 if (c <= step) el.classList.add('active');
                 else el.classList.remove('active');
             });
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         async function getFileData(inputId) {
@@ -129,7 +171,7 @@
                 const reader = new FileReader();
                 reader.onload = () => resolve({
                     base64: reader.result.split(',')[1],
-                    fullData: reader.result, // Keep full for PDF
+                    fullData: reader.result,
                     mimeType: file.type,
                     fileName: file.name
                 });
@@ -151,7 +193,6 @@
             const data = {};
             payload.forEach((value, key) => data[key] = value);
 
-            // Fetch file data
             const files = {
                 file_aadhar_front: await getFileData('file_aadhar_front'),
                 file_aadhar_back: await getFileData('file_aadhar_back'),
@@ -159,7 +200,6 @@
                 file_photo: await getFileData('file_photo')
             };
 
-            // Prep data for server (just base64)
             const serverData = { ...data };
             Object.keys(files).forEach(k => {
                 if(files[k]) serverData[k] = { 
@@ -195,25 +235,28 @@
             const doc = new jsPDF();
             const get = (key) => data[key] || "________________";
 
-            // PAGE 1: Professional Joining Form
+            // Page 1 Layout
             doc.setFont("helvetica", "bold");
             doc.setFontSize(22);
             doc.text("EMPLOYEE JOINING FORM", 105, 20, { align: "center" });
+            doc.setDrawColor(37, 99, 235);
+            doc.setLineWidth(1);
             doc.line(20, 25, 190, 25);
 
-            doc.setFontSize(14);
-            doc.setTextColor(50, 50, 50);
-            
             let y = 35;
             const drawSection = (title) => {
                 doc.setFont("helvetica", "bold");
+                doc.setFontSize(12);
+                doc.setTextColor(37, 99, 235);
                 doc.text(title, 20, y);
                 y += 2;
                 doc.setDrawColor(200);
+                doc.setLineWidth(0.2);
                 doc.line(20, y, 190, y);
                 y += 8;
                 doc.setFont("helvetica", "normal");
-                doc.setFontSize(10);
+                doc.setFontSize(9);
+                doc.setTextColor(0);
             };
 
             const drawField = (label, val, xOffset = 0) => {
@@ -223,53 +266,83 @@
                 doc.text(String(val), 60 + xOffset, y);
             };
 
-            drawSection("PERSONAL INFORMATION");
-            drawField("Full Name", get("Employee Name(AsperAadhar)")); y += 7;
-            drawField("Date of Birth", get("Date of Birth")); y += 7;
-            drawField("Gender", get("Gender")); y += 7;
-            drawField("Aadhar No", get("AdharNo")); y += 12;
+            drawSection("PERSONAL & CONTACT INFORMATION");
+            drawField("Full Name", get("Employee Name(AsperAadhar)"));
+            drawField("Joining Date", get("Date of Joining"), 90); y += 7;
+            drawField("Date of Birth", get("Date of Birth"));
+            drawField("Gender", get("Gender"), 90); y += 7;
+            drawField("Blood Group", get("Blood Group"));
+            drawField("Marital Status", get("Marital Status"), 90); y += 7;
+            drawField("Contact No", get("Contact No"));
+            drawField("Email Id", get("Email id"), 90); y += 7;
+            drawField("Permanent Addr", get("Permanent Address").substring(0, 30));
+            drawField("State", get("State"), 90); y += 12;
 
-            drawSection("BANKING DETAILS");
-            drawField("Bank Name", get("Bank Name")); y += 7;
-            drawField("Account No", get("Account No")); y += 7;
-            drawField("IFSC Code", get("IFSC Code")); y += 12;
+            drawSection("STATUTORY & BANKING DETAILS");
+            drawField("Aadhar No", get("AdharNo"));
+            drawField("PAN Number", get("Pan Number"), 90); y += 7;
+            drawField("UAN Number", get("UAN Number"));
+            drawField("ESI/WC Policy", get("ESI No/ WC POLICY"), 90); y += 7;
+            drawField("Bank Name", get("Bank Name"));
+            drawField("IFSC Code", get("IFSC Code"), 90); y += 7;
+            drawField("Account No", get("Account No")); y += 12;
 
-            drawSection("FAMILY & EMERGENCY");
-            drawField("Father's Name", get("Father name")); y += 7;
-            drawField("Emergency No", get("Emergency Contact No")); y += 12;
+            drawSection("FAMILY INFORMATION");
+            drawField("Father's Name", get("Father name"));
+            drawField("Father DOB", get("Father Date of Birth"), 90); y += 7;
+            drawField("Mother's Name", get("Mother Name"));
+            drawField("Mother DOB", get("Mother Date of Birth"), 90); y += 7;
+            drawField("Wife's Name", get("Wife Name"));
+            drawField("Wife DOB", get("Wife Date of Birth"), 90); y += 7;
+            drawField("Marriage Date", get("Date of Marriage")); y += 7;
+            
+            const numChildren = parseInt(data["No.Childrens"]) || 0;
+            if (numChildren > 0) {
+                for(let i=1; i<=numChildren; i++) {
+                    drawField(`Child ${i}`, get(`Child ${i} Name`) + ` (${get(`Son/Daughter`)})`, 0);
+                    drawField(`Child ${i} DOB`, get(`Child ${i} DOB`), 90); y += 7;
+                }
+            }
+            y += 5;
 
-            drawSection("PROFESSIONAL EXPERIENCE");
-            drawField("Exp. (Years)", get("Scaffolding Work Experience")); y += 20;
+            drawSection("EMERGENCY & PROFESSIONAL");
+            drawField("Emergency Name", get("Name of Emergency Contact"));
+            drawField("Emergency No", get("Emergency Contact No"), 90); y += 7;
+            drawField("Relationship", get("Employee Relationwith EmergencyContactNo")); y += 7;
+            drawField("Education", get("Education"));
+            drawField("Experience", get("Scaffolding Work Experience") + " Years", 90); y += 20;
 
             doc.setFont("helvetica", "italic");
-            doc.text("I hereby declare that the information provided is true to the best of my knowledge.", 20, y);
-            y += 20;
+            doc.setFontSize(8);
+            doc.text("I hereby declare that the information provided is true to the best of my knowledge.", 105, y, {align: 'center'});
+            y += 15;
             doc.line(20, y, 70, y); doc.line(140, y, 190, y);
             y += 5;
             doc.text("Employee Signature", 45, y, {align: 'center'});
             doc.text("Authorized Signatory", 165, y, {align: 'center'});
 
-            // PAGE 2: Document Annexure
+            // Annexure Page
             doc.addPage();
             doc.setFont("helvetica", "bold");
             doc.setFontSize(18);
             doc.text("DOCUMENT ANNEXURE", 105, 20, { align: "center" });
+            doc.setDrawColor(200);
             doc.line(20, 25, 190, 25);
 
             const addImg = (imgData, title, x, y, w, h) => {
                 if(!imgData) return;
                 doc.setFontSize(10);
+                doc.setTextColor(100);
                 doc.text(title, x, y - 2);
                 doc.addImage(imgData, 'JPEG', x, y, w, h);
             };
 
-            // Grid for docs
             if(files.file_photo) addImg(files.file_photo.fullData, "Passport Photo", 20, 40, 40, 50);
             if(files.file_aadhar_front) addImg(files.file_aadhar_front.fullData, "Aadhar Front", 70, 40, 110, 70);
             if(files.file_aadhar_back) addImg(files.file_aadhar_back.fullData, "Aadhar Back", 20, 120, 110, 70);
             if(files.file_bank) addImg(files.file_bank.fullData, "Bank Passbook", 20, 200, 160, 80);
 
-            doc.save(`Onboarding_Form_${get('Employee Name(AsperAadhar)')}.pdf`);
+            doc.save(`Joining_Package_${get('Employee Name(AsperAadhar)')}.pdf`);
         }
 
         function updateChildrenFields() {
@@ -278,9 +351,17 @@
             container.innerHTML = '';
             for (let i = 1; i <= Math.min(count, 3); i++) {
                 const div = document.createElement('div');
-                div.className = 'p-3 bg-slate-50 border rounded-lg grid grid-cols-2 gap-2 text-xs';
-                div.innerHTML = `<div><label>Child ${i} Name</label><input type="text" name="Child ${i} Name" class="w-full p-1 border"></div>
-                                 <div><label>DOB</label><input type="date" name="Child ${i} DOB" class="w-full p-1 border"></div>`;
+                div.className = 'p-3 bg-white border border-slate-200 rounded-xl shadow-sm space-y-2';
+                div.innerHTML = `
+                    <p class="text-[10px] font-bold text-blue-500 uppercase">Child ${i}</p>
+                    <input type="text" name="Child ${i} Name" placeholder="Name" class="w-full p-2 text-xs border rounded-lg">
+                    <select name="Son/Daughter" class="w-full p-2 text-xs border rounded-lg">
+                        <option value="">Relation</option>
+                        <option value="Son">Son</option>
+                        <option value="Daughter">Daughter</option>
+                    </select>
+                    <input type="date" name="Child ${i} DOB" class="w-full p-2 text-xs border rounded-lg">
+                `;
                 container.appendChild(div);
             }
         }
