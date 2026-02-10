@@ -56,17 +56,16 @@
 
     <script>
         /**
-         * 1. Deploy your Code.gs as a Web App (Anyone can access)
-         * 2. Paste the 'Web App URL' here.
+         * Live API Endpoint connected to your Google Sheet
          */
-        const API_URL = ""; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbzeljdxGG8RBZ9L8hucmh9AEhw6ZwdtFcUYaj9umEoI_-m583bSwoOLkSmAN-3rRORomA/exec"; 
 
         let allMaterials = [];
 
         async function init() {
             const stats = document.getElementById('stats');
             if (!API_URL) {
-                stats.innerText = "https://script.google.com/macros/s/AKfycbzeljdxGG8RBZ9L8hucmh9AEhw6ZwdtFcUYaj9umEoI_-m583bSwoOLkSmAN-3rRORomA/exec";
+                stats.innerText = "Setup Required: Paste your Apps Script Web App URL in index.html";
                 document.getElementById('loadingStatus').classList.add('hidden');
                 return;
             }
@@ -86,6 +85,7 @@
                 
                 renderMaterials(allMaterials);
             } catch (error) {
+                console.error("API Error:", error);
                 stats.innerText = "API Connection Error. Verify deployment settings.";
             } finally {
                 document.getElementById('loadingStatus').classList.add('hidden');
