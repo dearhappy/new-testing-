@@ -129,6 +129,7 @@
                 const reader = new FileReader();
                 reader.onload = () => resolve({
                     base64: reader.result.split(',')[1],
+                    fullData: reader.result, // Keep full for PDF
                     mimeType: file.type,
                     fileName: file.name
                 });
@@ -143,28 +144,40 @@
             const loader = document.getElementById('loader');
 
             submitBtn.disabled = true;
-            btnText.innerText = "Uploading...";
+            btnText.innerText = "Processing...";
             loader.classList.remove('hidden');
 
             const payload = new FormData(form);
             const data = {};
             payload.forEach((value, key) => data[key] = value);
 
-            // Append files to data object as Base64
-            data.file_aadhar_front = await getFileData('file_aadhar_front');
-            data.file_aadhar_back = await getFileData('file_aadhar_back');
-            data.file_bank = await getFileData('file_bank');
-            data.file_photo = await getFileData('file_photo');
+            // Fetch file data
+            const files = {
+                file_aadhar_front: await getFileData('file_aadhar_front'),
+                file_aadhar_back: await getFileData('file_aadhar_back'),
+                file_bank: await getFileData('file_bank'),
+                file_photo: await getFileData('file_photo')
+            };
+
+            // Prep data for server (just base64)
+            const serverData = { ...data };
+            Object.keys(files).forEach(k => {
+                if(files[k]) serverData[k] = { 
+                    base64: files[k].base64, 
+                    mimeType: files[k].mimeType, 
+                    fileName: files[k].fileName 
+                };
+            });
 
             fetch(scriptURL, { 
                 method: 'POST', 
-                body: JSON.stringify(data),
+                body: JSON.stringify(serverData),
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }
             })
             .then(res => res.json())
             .then(res => {
                 if(res.result === 'success') {
-                    generatePDF();
+                    generateProfessionalPDF(data, files);
                     alert('Submission Complete! Files saved and PDF generated.');
                     location.reload();
                 } else { throw new Error(res.error); }
@@ -177,21 +190,86 @@
             });
         });
 
-        function generatePDF() {
+        async function generateProfessionalPDF(data, files) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            const formData = new FormData(form);
-            doc.setFontSize(20);
-            doc.text("SGB BRANDSAFWAY JOINING FORM", 105, 20, {align: 'center'});
-            doc.setFontSize(10);
-            let y = 40;
-            formData.forEach((val, key) => {
-                if(val && y < 280) {
-                    doc.text(`${key}: ${val}`, 20, y);
-                    y += 8;
-                }
-            });
-            doc.save(`JoiningForm_${formData.get('Employee Name(AsperAadhar)')}.pdf`);
+            const get = (key) => data[key] || "________________";
+
+            // PAGE 1: Professional Joining Form
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(22);
+            doc.text("EMPLOYEE JOINING FORM", 105, 20, { align: "center" });
+            doc.line(20, 25, 190, 25);
+
+            doc.setFontSize(14);
+            doc.setTextColor(50, 50, 50);
+            
+            let y = 35;
+            const drawSection = (title) => {
+                doc.setFont("helvetica", "bold");
+                doc.text(title, 20, y);
+                y += 2;
+                doc.setDrawColor(200);
+                doc.line(20, y, 190, y);
+                y += 8;
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(10);
+            };
+
+            const drawField = (label, val, xOffset = 0) => {
+                doc.setFont("helvetica", "bold");
+                doc.text(label + ":", 20 + xOffset, y);
+                doc.setFont("helvetica", "normal");
+                doc.text(String(val), 60 + xOffset, y);
+            };
+
+            drawSection("PERSONAL INFORMATION");
+            drawField("Full Name", get("Employee Name(AsperAadhar)")); y += 7;
+            drawField("Date of Birth", get("Date of Birth")); y += 7;
+            drawField("Gender", get("Gender")); y += 7;
+            drawField("Aadhar No", get("AdharNo")); y += 12;
+
+            drawSection("BANKING DETAILS");
+            drawField("Bank Name", get("Bank Name")); y += 7;
+            drawField("Account No", get("Account No")); y += 7;
+            drawField("IFSC Code", get("IFSC Code")); y += 12;
+
+            drawSection("FAMILY & EMERGENCY");
+            drawField("Father's Name", get("Father name")); y += 7;
+            drawField("Emergency No", get("Emergency Contact No")); y += 12;
+
+            drawSection("PROFESSIONAL EXPERIENCE");
+            drawField("Exp. (Years)", get("Scaffolding Work Experience")); y += 20;
+
+            doc.setFont("helvetica", "italic");
+            doc.text("I hereby declare that the information provided is true to the best of my knowledge.", 20, y);
+            y += 20;
+            doc.line(20, y, 70, y); doc.line(140, y, 190, y);
+            y += 5;
+            doc.text("Employee Signature", 45, y, {align: 'center'});
+            doc.text("Authorized Signatory", 165, y, {align: 'center'});
+
+            // PAGE 2: Document Annexure
+            doc.addPage();
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(18);
+            doc.text("DOCUMENT ANNEXURE", 105, 20, { align: "center" });
+            doc.line(20, 25, 190, 25);
+
+            const addImg = (imgData, title, x, y, w, h) => {
+                if(!imgData) return;
+                doc.setFontSize(10);
+                doc.text(title, x, y - 2);
+                doc.addImage(imgData, 'JPEG', x, y, w, h);
+            };
+
+            // Grid for docs
+            if(files.file_photo) addImg(files.file_photo.fullData, "Passport Photo", 20, 40, 40, 50);
+            if(files.file_aadhar_front) addImg(files.file_aadhar_front.fullData, "Aadhar Front", 70, 40, 110, 70);
+            if(files.file_aadhar_back) addImg(files.file_aadhar_back.fullData, "Aadhar Back", 20, 120, 110, 70);
+            if(files.file_bank) addImg(files.file_bank.fullData, "Bank Passbook", 20, 200, 160, 80);
+
+            doc.save(`Onboarding_Form_${get('Employee Name(AsperAadhar)')}.pdf`);
         }
 
         function updateChildrenFields() {
