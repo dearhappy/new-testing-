@@ -6,142 +6,20 @@
     <title>SGB Brandsafway - Professional Onboarding</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap');
-        
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
-        .hindi-text { font-family: 'Noto Sans Devanagari', sans-serif; }
-        
         .step { display: none; }
         .step.active { display: block; animation: fadeInRight 0.5s ease-out; }
-        
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .input-focus:focus {
-            ring: 2px;
-            ring-color: #3b82f6;
-            border-color: #3b82f6;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .step-circle {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .step-circle.active {
-            background-color: #2563eb;
-            color: white;
-            box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
-            transform: scale(1.1);
-        }
-
-        .child-box {
-            transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
-        }
-        
-        @keyframes fadeInRight {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* Hidden Templates for PDF Rendering */
-        .contract-template {
-            width: 800px;
-            padding: 50px;
-            background: white;
-            position: absolute;
-            left: -9999px;
-            top: 0;
-            color: black;
-            line-height: 1.5;
-            font-size: 13px;
-        }
-        .header-logo { font-size: 22px; font-weight: bold; color: #000; }
-        .header-address { font-size: 11px; color: #333; margin-bottom: 20px; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .input-focus:focus { ring: 2px; ring-color: #3b82f6; border-color: #3b82f6; outline: none; transition: all 0.3s ease; }
+        .step-circle { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .step-circle.active { background-color: #2563eb; color: white; box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); transform: scale(1.1); }
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
-
-    <!-- Contract Template Page 1 (Hidden) -->
-    <div id="contractPage1" class="contract-template hindi-text">
-        <div style="text-align: right;">तारीख: <span class="p_date"></span></div>
-        <div class="header-logo">SGB BrandSafway Private Limited</div>
-        <div class="header-address">
-            H. No.: 1-98/5/78 & 79, Ground Floor, KV Towers, Jubilee Enclave, Hi-Tech City, Madhapur, Hyderabad 500 081, Telangana, India
-        </div>
-        
-        <p>HR/SGB/Contract/2026</p>
-        <p><strong>नाम:</strong> <span class="p_name"></span></p>
-        <p><strong>पिता का नाम:</strong> <span class="p_father"></span></p>
-        <p><strong>मूल निवासी:</strong> <span class="p_address"></span></p>
-        <p><strong>आधार:</strong> <span class="p_aadhar"></span></p>
-        
-        <p style="margin-top: 15px;">यह आपका कर्तव्य होगा कि आप सुरक्षित तरीके से काम करें ताकि आप खुद को या अपने साथी कर्मचारियों को जोखिम में न डालें। कंपनी की एक सुरक्षा नीति है जो आपको जारी की जाएगी और हर समय उसका पालन किया जाना चाहिए।</p>
-        
-        <p>1. इस कंपनी ने मेसर्स/स्थान के साथ एक अनुबंध में प्रवेश किया है, जो मचान, छत की चादर, पेंटिंग और डिलीवरी पूर्व निरीक्षण गतिविधियों जैसे इंजीनियरिंग कार्यों के निष्पादन के लिए है।</p>
-        <p>2. इस प्रकार आप इस बात से अवगत होंगे कि उपरोक्त कार्य अनुसूची के संबंध में इस कंपनी का कार्य केवल इसी अनुबंध अवधि की अवधि के लिए चलने की उम्मीद है।</p>
-        <p>3. उक्त अनुबंध से उत्पन्न होने वाली कार्य अनुसूची के लिए व्यक्तियों को उनकी योग्यता और उपयुक्तता के आधार पर नियुक्त किया जाए।</p>
-        <p>4. आपने अनुबंध की अवधि के लिए उपरोक्त उल्लिखित अनुबंध से उत्पन्न होने वाले कार्य में भाग लेने के लिए इस कंपनी को अपनी सेवाएं देने की इच्छा व्यक्त की है।</p>
-        <p>5. निम्नलिखित शर्तों के अधीन:</p>
-        <div style="padding-left: 20px;">
-            <p>a) आपको एक निश्चित अवधि के लिए नियुक्त किया जाता है। प्रबंधन आपके रोजगार को आगे की अवधि के लिए बढ़ाने का अधिकार सुरक्षित रखता है।</p>
-            <p>b) आप निर्दिष्ट स्थान पर आधारित होंगे; हालाँकि, प्रबंधन के विवेक के अधीन, आप ग्राहक के किसी अन्य स्थान पर स्थानांतरित होने के लिए उत्तरदायी हैं।</p>
-            <p>c) अनुबंध की समाप्ति के साथ आपका रोजगार समाप्त माना जाएगा।</p>
-            <p>d) यदि प्रबंधन अनुबंध बंद करने का निर्णय लेता है, तो आपका रोजगार बिना किसी नोटिस या भुगतान के छोटा किया जा सकता है।</p>
-            <p>e) पीएफ और ईएसआई के लिए वैधानिक कटौती पारिश्रमिक से की जाएगी।</p>
-            <p>f) आप केवल वास्तविक दिनों के लिए पारिश्रमिक के हकदार होंगे।</p>
-            <p>g) आपको ईमानदारी, कुशलता और समर्पण के साथ काम करना होगा।</p>
-            <p>h) आप कोई कदाचार नहीं करेंगे, अन्यथा आप अनुशासनात्मक कार्रवाई के लिए उत्तरदायी होंगे।</p>
-            <p>i) आप कंपनी/ग्राहक से संबंधित किसी भी गोपनीय जानकारी को किसी बाहरी पार्टी को नहीं बताएंगे।</p>
-        </div>
-    </div>
-
-    <!-- Contract Template Page 2 (Hidden) -->
-    <div id="contractPage2" class="contract-template hindi-text">
-        <div style="padding-left: 20px;">
-            <p>j) आप को सौंपे गए औजारों और अन्य भौतिक वस्तुओं की सुरक्षित अभिरक्षा के लिए आप जिम्मेदार होंगे।</p>
-            <p>k) आप छुट्टी के नियमों, विनियमों और कंपनी के अनुशासन से बाध्य हैं।</p>
-            <p>l) यदि आप सेवा छोड़ना चाहते हैं, तो 15 दिनों का नोटिस देना होगा।</p>
-            <p>m) 7 दिनों से अधिक बिना सूचना अनुपस्थित रहने पर आपकी सेवाएं समाप्त कर दी जाएंगी।</p>
-            <p>n) चिकित्सकीय रूप से अनुपयुक्त या दिवालिया घोषित होने पर आपको तुरंत बर्खास्त कर दिया जाएगा।</p>
-            <p>o) गलत जानकारी देने पर आप बर्खास्तगी के लिए उत्तरदायी होंगे।</p>
-            <p>p) इस्तीफे पर आप कंपनी की संपत्ति तुरंत वापस कर देंगे।</p>
-            <p>q) इस अनुबंध के दौरान आप किसी अन्य कंपनी के साथ नियोजित नहीं होंगे।</p>
-            <p>r) अप्रत्याशित घटना (Force Majeure) की स्थिति में दायित्वों से छूट मिलेगी।</p>
-            <p>s) विवाद की स्थिति में कंपनी का निर्णय अंतिम होगा।</p>
-            <p>t) किसी भी कानूनी विवाद के लिए स्थानीय अदालतों का अधिकार क्षेत्र होगा।</p>
-            <p>u) आप बिना शर्त शर्तों को स्वीकार करने के बाद ही हस्ताक्षर करें।</p>
-            <p>v) यह समझौता कंपनी और आपके बीच पूरी समझ का गठन करता है।</p>
-            <p>w) आप स्थायी कर्मचारियों के लिए लागू वैधानिक लाभ के हकदार नहीं हैं।</p>
-        </div>
-
-        <p style="margin-top: 30px;">For <strong>SGB BrandSafway Private Limited</strong></p>
-        <br><br>
-        <p>अधिकृत हस्ताक्षरकर्ता</p>
-        
-        <div style="margin-top: 40px; border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
-            <p>मैंने रोजगार के उपरोक्त नियमों और शर्तों को पढ़ लिया है और स्वेच्छा से इसे स्वीकार कर लिया है।</p>
-            <br><br>
-            <div style="display: flex; justify-content: space-between;">
-                <div>नाम: <span class="p_name"></span></div>
-                <div>हस्ताक्षर: ____________________</div>
-            </div>
-        </div>
-    </div>
 
     <div class="glass-card w-full max-w-3xl rounded-2xl shadow-2xl p-6 md:p-10 animate__animated animate__fadeIn">
         
@@ -150,17 +28,16 @@
             <div class="flex items-center justify-between mb-8">
                 <div>
                     <h1 class="text-3xl font-extrabold text-slate-800 tracking-tight">Joining Form</h1>
-                    <p class="text-slate-500 text-sm mt-1">SGB Brandsafway Pvt Ltd - Employee Enrollment</p>
+                    <p class="text-slate-500 text-sm mt-1">SGB Brandsafway Pvt Ltd</p>
                 </div>
                 <div class="hidden sm:flex space-x-4">
                     <div id="circle1" class="step-circle active font-bold">1</div>
-                    <div class="h-0.5 w-8 bg-slate-200 mt-5"></div>
                     <div id="circle2" class="step-circle bg-slate-100 text-slate-400 font-bold">2</div>
+                    <div id="circle3" class="step-circle bg-slate-100 text-slate-400 font-bold">3</div>
                 </div>
             </div>
-            
             <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
-                <div id="progressBar" class="h-full bg-blue-600 w-1/2 transition-all duration-500 ease-out"></div>
+                <div id="progressBar" class="h-full bg-blue-600 w-1/3 transition-all duration-500 ease-out"></div>
             </div>
         </div>
 
@@ -178,127 +55,49 @@
             <input type="hidden" name="UAN remarks" value="">
             <input type="hidden" name="ESI Remark" value="">
 
-            <!-- STEP 1: Personal Information -->
+            <!-- STEP 1 -->
             <div id="step1" class="step active">
-                <h3 class="text-xl font-bold mb-6 text-slate-700 flex items-center">
-                    <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mr-3 text-sm">01</span>
-                    Personal & Banking Details
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Employee Name (Aadhar)</label>
-                        <input type="text" id="form_name" name="Employee Name(AsperAadhar)" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Date of Birth</label>
-                        <input type="date" name="Date of Birth" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Gender</label>
-                        <select name="Gender" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Blood Group</label>
-                        <input type="text" name="Blood Group" placeholder="e.g. O+" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Marital Status</label>
-                        <select name="Marital Status" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                            <option value="">Select Status</option>
-                            <option value="Single">Single</option>
-                            <option value="Married">Married</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Permanent Address</label>
-                        <input type="text" id="form_address" name="Permanent Address" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Contact No</label>
-                        <input type="tel" name="Contact No" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Aadhar No</label>
-                        <input type="text" id="form_aadhar" name="AdharNo" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                    </div>
-                    <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-blue-50/50 rounded-2xl mt-2">
-                        <div>
-                            <label class="text-xs font-semibold text-blue-600 uppercase mb-1 ml-1">Bank Name</label>
-                            <input type="text" name="Bank Name" class="input-focus w-full px-4 py-2 bg-white border border-blue-100 rounded-lg">
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-blue-600 uppercase mb-1 ml-1">Account Number</label>
-                            <input type="text" name="Account No" class="input-focus w-full px-4 py-2 bg-white border border-blue-100 rounded-lg">
-                        </div>
-                        <div>
-                            <label class="text-xs font-semibold text-blue-600 uppercase mb-1 ml-1">IFSC Code</label>
-                            <input type="text" name="IFSC Code" class="input-focus w-full px-4 py-2 bg-white border border-blue-100 rounded-lg">
-                        </div>
-                    </div>
+                <h3 class="text-xl font-bold mb-6 text-slate-700">01. Personal & Bank Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Employee Name (Aadhar)</label><input type="text" name="Employee Name(AsperAadhar)" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Date of Birth</label><input type="date" name="Date of Birth" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Gender</label><select name="Gender" class="input-focus w-full px-4 py-2 border rounded-xl"><option value="">Select</option><option value="Male">Male</option><option value="Female">Female</option></select></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Contact No</label><input type="tel" name="Contact No" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Aadhar No</label><input type="text" name="AdharNo" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Bank Name</label><input type="text" name="Bank Name" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Account No</label><input type="text" name="Account No" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">IFSC Code</label><input type="text" name="IFSC Code" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
                 </div>
-                <div class="mt-10 flex justify-end">
-                    <button type="button" onclick="nextStep(2)" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 hover:-translate-y-1 transition-all">
-                        Continue to Next Part
-                    </button>
-                </div>
+                <div class="mt-8 flex justify-end"><button type="button" onclick="nextStep(2)" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold">Next Part</button></div>
             </div>
 
-            <!-- STEP 2: Family & Professional -->
+            <!-- STEP 2 -->
             <div id="step2" class="step">
-                <h3 class="text-xl font-bold mb-6 text-slate-700 flex items-center">
-                    <span class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mr-3 text-sm">02</span>
-                    Family & Experience Details
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Father's Name</label>
-                        <input type="text" id="form_father" name="Father name" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Mother's Name</label>
-                        <input type="text" name="Mother Name" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Wife's Name</label>
-                        <input type="text" name="Wife Name" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">No. of Children</label>
-                        <input type="number" name="No.Childrens" id="numChildren" min="0" max="3" oninput="updateChildrenFields()" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                    </div>
-                    
-                    <!-- Dynamic Children -->
+                <h3 class="text-xl font-bold mb-6 text-slate-700">02. Family & Experience</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Father's Name</label><input type="text" name="Father name" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">No. of Children</label><input type="number" name="No.Childrens" id="numChildren" min="0" max="3" oninput="updateChildrenFields()" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
                     <div id="childrenContainer" class="col-span-full space-y-4"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Experience (Years)</label><input type="number" name="Scaffolding Work Experience" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Emergency Contact</label><input type="tel" name="Emergency Contact No" class="input-focus w-full px-4 py-2 border rounded-xl"></div>
+                </div>
+                <div class="mt-8 flex justify-between"><button type="button" onclick="nextStep(1)" class="text-slate-500">Back</button><button type="button" onclick="nextStep(3)" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold">Next: Upload Docs</button></div>
+            </div>
 
-                    <div class="md:col-span-2 h-px bg-slate-100 my-2"></div>
-
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Education</label>
-                        <input type="text" name="Education" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Work Experience (Years)</label>
-                        <input type="number" name="Scaffolding Work Experience" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Emergency Contact No</label>
-                        <input type="tel" name="Emergency Contact No" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                    </div>
-                    <div>
-                        <label class="text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Emergency Relation</label>
-                        <input type="text" name="Employee Relationwith EmergencyContactNo" placeholder="e.g. Brother" class="input-focus w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl">
-                    </div>
+            <!-- STEP 3 -->
+            <div id="step3" class="step">
+                <h3 class="text-xl font-bold mb-6 text-slate-700">03. Documents Upload</h3>
+                <p class="text-sm text-slate-500 mb-4">Upload clear photos or scans of your documents.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Aadhar Front</label><input type="file" id="file_aadhar_front" class="p-2 border w-full rounded-lg"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Aadhar Back</label><input type="file" id="file_aadhar_back" class="p-2 border w-full rounded-lg"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Bank Passbook</label><input type="file" id="file_bank" class="p-2 border w-full rounded-lg"></div>
+                    <div><label class="text-xs font-bold text-slate-500 uppercase">Passport Size Photo</label><input type="file" id="file_photo" class="p-2 border w-full rounded-lg"></div>
                 </div>
                 <div class="mt-10 flex justify-between items-center">
-                    <button type="button" onclick="nextStep(1)" class="text-slate-500 font-semibold hover:text-slate-800 transition-colors">
-                        ← Go Back
-                    </button>
-                    <button type="submit" id="submitBtn" class="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-emerald-100 hover:bg-emerald-700 hover:-translate-y-1 transition-all flex items-center">
-                        <span id="btnText">Submit & Download Form</span>
+                    <button type="button" onclick="nextStep(2)" class="text-slate-500">Back</button>
+                    <button type="submit" id="submitBtn" class="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg flex items-center">
+                        <span id="btnText">Submit & Finish</span>
                         <div id="loader" class="hidden ml-3 w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     </button>
                 </div>
@@ -307,58 +106,34 @@
     </div>
 
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwn1oDVHfFgKqMJfkguVyGxuY7WO5z9yupblXVc4J2zfiMZF6AJITZOWAZDJ3To-j0gBQ/exec'; 
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwn1oDVHfFgKqMJfkguVyGxuY7WO5z9yupblXVc4J2zfiMZF6AJITZOWAZDJ3To-j0gBQ/exec';
         const form = document.getElementById('onboardingForm');
 
         function nextStep(step) {
             document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
             document.getElementById('step' + step).classList.add('active');
-            
             const bar = document.getElementById('progressBar');
-            const c1 = document.getElementById('circle1');
-            const c2 = document.getElementById('circle2');
-            
-            if (step === 2) {
-                bar.style.width = '100%';
-                c2.classList.add('active');
-            } else {
-                bar.style.width = '50%';
-                c2.classList.remove('active');
-            }
+            const circles = [1, 2, 3];
+            bar.style.width = (step / 3 * 100) + '%';
+            circles.forEach(c => {
+                const el = document.getElementById('circle' + c);
+                if (c <= step) el.classList.add('active');
+                else el.classList.remove('active');
+            });
         }
 
-        function updateChildrenFields() {
-            const container = document.getElementById('childrenContainer');
-            const count = parseInt(document.getElementById('numChildren').value) || 0;
-            const maxChildren = 3; 
-            container.innerHTML = '';
-            for (let i = 1; i <= Math.min(count, maxChildren); i++) {
-                const childDiv = document.createElement('div');
-                childDiv.className = 'child-box grid grid-cols-1 md:grid-cols-3 gap-3 p-4 bg-slate-50 rounded-xl animate__animated animate__fadeInUp';
-                childDiv.innerHTML = `
-                    <div class="col-span-full flex items-center mb-1">
-                         <div class="w-1.5 h-4 bg-blue-500 rounded-full mr-2"></div>
-                         <span class="text-xs font-bold text-slate-600 uppercase">Child ${i} Details</span>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Full Name</label>
-                        <input type="text" name="Child ${i} Name" class="input-focus px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-sm">
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Son/Daughter</label>
-                        <select name="Son/Daughter" class="input-focus px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-sm">
-                            <option value="">Select</option>
-                            <option value="Son">Son</option>
-                            <option value="Daughter">Daughter</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase">Date of Birth</label>
-                        <input type="date" name="Child ${i} DOB" class="input-focus px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-sm">
-                    </div>
-                `;
-                container.appendChild(childDiv);
-            }
+        async function getFileData(inputId) {
+            const file = document.getElementById(inputId).files[0];
+            if (!file) return null;
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve({
+                    base64: reader.result.split(',')[1],
+                    mimeType: file.type,
+                    fileName: file.name
+                });
+                reader.readAsDataURL(file);
+            });
         }
 
         form.addEventListener('submit', async e => {
@@ -366,154 +141,70 @@
             const submitBtn = document.getElementById('submitBtn');
             const btnText = document.getElementById('btnText');
             const loader = document.getElementById('loader');
-            
+
             submitBtn.disabled = true;
-            btnText.innerText = "Processing Data...";
+            btnText.innerText = "Uploading...";
             loader.classList.remove('hidden');
 
-            try {
-                // Populate both pages of the contract template
-                const name = document.getElementById('form_name').value || "________________";
-                const father = document.getElementById('form_father').value || "________________";
-                const address = document.getElementById('form_address').value || "________________";
-                const aadhar = document.getElementById('form_aadhar').value || "________________";
-                const today = new Date().toLocaleDateString('hi-IN');
+            const payload = new FormData(form);
+            const data = {};
+            payload.forEach((value, key) => data[key] = value);
 
-                document.querySelectorAll('.p_name').forEach(el => el.innerText = name);
-                document.querySelectorAll('.p_father').forEach(el => el.innerText = father);
-                document.querySelectorAll('.p_address').forEach(el => el.innerText = address);
-                document.querySelectorAll('.p_aadhar').forEach(el => el.innerText = aadhar);
-                document.querySelectorAll('.p_date').forEach(el => el.innerText = today);
+            // Append files to data object as Base64
+            data.file_aadhar_front = await getFileData('file_aadhar_front');
+            data.file_aadhar_back = await getFileData('file_aadhar_back');
+            data.file_bank = await getFileData('file_bank');
+            data.file_photo = await getFileData('file_photo');
 
-                const response = await fetch(scriptURL, { method: 'POST', body: new FormData(form)});
-                const data = await response.json();
-
-                if(data.result === 'success') {
-                    await generatePDF();
-                    
-                    const successMsg = document.createElement('div');
-                    successMsg.className = 'fixed top-10 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-8 py-4 rounded-2xl shadow-2xl animate__animated animate__bounceInDown flex items-center z-50';
-                    successMsg.innerHTML = '<span class="mr-3 text-2xl">✔</span> <div><p class="font-bold">Success!</p><p class="text-xs opacity-80">Full 3-page package generated.</p></div>';
-                    document.body.appendChild(successMsg);
-                    
-                    setTimeout(() => {
-                        successMsg.classList.replace('animate__bounceInDown', 'animate__bounceOutUp');
-                        setTimeout(() => successMsg.remove(), 1000);
-                    }, 3000);
-
-                    form.reset();
-                    document.getElementById('childrenContainer').innerHTML = '';
-                    nextStep(1);
-                } else {
-                    throw new Error('Server error');
-                }
-            } catch (error) {
-                alert('Error submitting form. Ensure your Script URL is correct.');
-                console.error(error);
-            } finally {
+            fetch(scriptURL, { 
+                method: 'POST', 
+                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+            })
+            .then(res => res.json())
+            .then(res => {
+                if(res.result === 'success') {
+                    generatePDF();
+                    alert('Submission Complete! Files saved and PDF generated.');
+                    location.reload();
+                } else { throw new Error(res.error); }
+            })
+            .catch(err => alert('Error: ' + err.message))
+            .finally(() => {
                 submitBtn.disabled = false;
-                btnText.innerText = "Submit & Download Form";
+                btnText.innerText = "Submit & Finish";
                 loader.classList.add('hidden');
-            }
+            });
         });
 
-        async function generatePDF() {
+        function generatePDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            const data = new FormData(form);
-            const get = (key) => data.get(key) || "________________";
-
-            // --- PAGE 1: JOINING FORM ---
-            const primaryColor = [37, 99, 235];
-            const secondaryColor = [71, 85, 105];
-
-            doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-            doc.rect(0, 0, 210, 40, 'F');
-            doc.setTextColor(255, 255, 255);
-            doc.setFont("helvetica", "bold");
-            doc.setFontSize(24);
-            doc.text("SGB BRANDSAFWAY PVT LTD", 105, 22, { align: "center" });
+            const formData = new FormData(form);
+            doc.setFontSize(20);
+            doc.text("SGB BRANDSAFWAY JOINING FORM", 105, 20, {align: 'center'});
             doc.setFontSize(10);
-            doc.text("PROFESSIONAL EMPLOYEE ONBOARDING FORM", 105, 30, { align: "center" });
-
-            doc.setTextColor(0, 0, 0);
-            let y = 55;
-            const sectionHeader = (title) => {
-                doc.setFont("helvetica", "bold");
-                doc.setFontSize(14);
-                doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-                doc.text(title, 20, y);
-                y += 2;
-                doc.setDrawColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-                doc.line(20, y, 190, y);
-                y += 10;
-            };
-
-            const drawRow = (label1, val1, label2, val2) => {
-                doc.setFontSize(9);
-                doc.setFont("helvetica", "bold");
-                doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
-                doc.text(label1 + ":", 20, y);
-                doc.setFont("helvetica", "normal");
-                doc.setTextColor(0, 0, 0);
-                doc.text(String(val1), 60, y);
-                if (label2) {
-                    doc.setFont("helvetica", "bold");
-                    doc.setTextColor(secondaryColor[0], secondaryColor[1], secondaryColor[2]);
-                    doc.text(label2 + ":", 110, y);
-                    doc.setFont("helvetica", "normal");
-                    doc.setTextColor(0, 0, 0);
-                    doc.text(String(val2), 150, y);
+            let y = 40;
+            formData.forEach((val, key) => {
+                if(val && y < 280) {
+                    doc.text(`${key}: ${val}`, 20, y);
+                    y += 8;
                 }
-                y += 9;
-            };
+            });
+            doc.save(`JoiningForm_${formData.get('Employee Name(AsperAadhar)')}.pdf`);
+        }
 
-            sectionHeader("1. PERSONAL DETAILS");
-            drawRow("Full Name", get("Employee Name(AsperAadhar)"), "Date of Birth", get("Date of Birth"));
-            drawRow("Gender", get("Gender"), "Blood Group", get("Blood Group"));
-            drawRow("Marital Status", get("Marital Status"), "Contact No", get("Contact No"));
-            drawRow("Aadhar No", get("AdharNo"), "Permanent Address", get("Permanent Address").substring(0, 30));
-            
-            y += 5;
-            sectionHeader("2. BANKING & STATUTORY");
-            drawRow("Bank Name", get("Bank Name"), "IFSC Code", get("IFSC Code"));
-            drawRow("Account No", get("Account No"), "UAN Number", get("UAN Number"));
-
-            y += 5;
-            sectionHeader("3. FAMILY & EXPERIENCE");
-            drawRow("Father's Name", get("Father name"), "Mother's Name", get("Mother Name"));
-            drawRow("Wife's Name", get("Wife Name"), "Marriage Date", get("Date of Marriage"));
-            
-            const numChildren = parseInt(data.get("No.Childrens")) || 0;
-            if (numChildren > 0) {
-                for (let i = 1; i <= Math.min(numChildren, 3); i++) {
-                    drawRow(`Child ${i} Name`, get(`Child ${i} Name`), `DOB`, get(`Child ${i} DOB`));
-                }
+        function updateChildrenFields() {
+            const container = document.getElementById('childrenContainer');
+            const count = parseInt(document.getElementById('numChildren').value) || 0;
+            container.innerHTML = '';
+            for (let i = 1; i <= Math.min(count, 3); i++) {
+                const div = document.createElement('div');
+                div.className = 'p-3 bg-slate-50 border rounded-lg grid grid-cols-2 gap-2 text-xs';
+                div.innerHTML = `<div><label>Child ${i} Name</label><input type="text" name="Child ${i} Name" class="w-full p-1 border"></div>
+                                 <div><label>DOB</label><input type="date" name="Child ${i} DOB" class="w-full p-1 border"></div>`;
+                container.appendChild(div);
             }
-            drawRow("Education", get("Education"), "Experience", get("Scaffolding Work Experience") + " Years");
-            drawRow("Emergency Contact", get("Emergency Contact No"), "Relation", get("Employee Relationwith EmergencyContactNo"));
-
-            y = 265;
-            doc.line(20, y, 70, y);
-            doc.line(140, y, 190, y);
-            y += 5;
-            doc.setFont("helvetica", "bold");
-            doc.text("Employee Signature", 45, y, { align: "center" });
-            doc.text("Authorized Signatory", 165, y, { align: "center" });
-
-            // --- PAGE 2: CONTRACT PAGE 1 (HINDI) ---
-            doc.addPage();
-            const p1 = document.getElementById('contractPage1');
-            const canvas1 = await html2canvas(p1, { scale: 2 });
-            doc.addImage(canvas1.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
-
-            // --- PAGE 3: CONTRACT PAGE 2 (HINDI) ---
-            doc.addPage();
-            const p2 = document.getElementById('contractPage2');
-            const canvas2 = await html2canvas(p2, { scale: 2 });
-            doc.addImage(canvas2.toDataURL('image/png'), 'PNG', 0, 0, 210, 297);
-
-            doc.save(`SGB_Complete_Package_${get('Employee Name(AsperAadhar)') || 'Employee'}.pdf`);
         }
     </script>
 </body>
