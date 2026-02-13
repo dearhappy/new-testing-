@@ -46,7 +46,7 @@
     <!-- CONFIGURATION AREA -->
     <script>
         // PASTE YOUR GOOGLE SCRIPT WEB APP URL HERE
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwfZqbYK4kthRpzE938QymYSM0nATLp4fpZ8IvQHaznTuvnMo_psc7wS4nqFnxVE4Jf/exec"; 
+        const SCRIPT_URL = "PASTE_YOUR_DEPLOYED_WEB_APP_URL_HERE"; 
     </script>
 
     <!-- Main Container -->
@@ -71,7 +71,17 @@
                 <!-- Card Container -->
                 <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 space-y-5">
                     
-                    <!-- TBT Topic (Col O) -->
+                    <!-- Area (Col B) -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Area / Location</label>
+                        <div class="relative">
+                            <i class="fas fa-map-marker-alt absolute left-3 top-3.5 text-slate-400"></i>
+                            <input type="text" name="area" required placeholder="e.g. Assembly Line 1"
+                                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 font-medium">
+                        </div>
+                    </div>
+
+                    <!-- TBT Topic (Col C) -->
                     <div>
                         <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">TBT Topic / Description</label>
                         <div class="relative">
@@ -82,7 +92,7 @@
 
                 </div>
 
-                <!-- Photo Upload Section (Col P) -->
+                <!-- Photo Upload Section (Col D) -->
                 <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-1 overflow-hidden">
                     <input type="file" id="photoInput" accept="image/*" capture="environment" class="hidden" onchange="previewImage(this)">
                     <label for="photoInput" id="uploadLabel" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors">
@@ -108,7 +118,7 @@
 
             </form>
             
-            <p class="text-center text-slate-400 text-xs mt-6">Secure Submission System v4.0</p>
+            <p class="text-center text-slate-400 text-xs mt-6">Secure Submission System v5.0</p>
         </main>
     </div>
 
@@ -163,7 +173,7 @@
             e.preventDefault();
             
             // Validation
-            if (SCRIPT_URL === "PASTE_YOUR_DEPLOYED_WEB_APP_URL_HERE") {
+            if (SCRIPT_URL === "https://script.google.com/macros/s/AKfycbwfZqbYK4kthRpzE938QymYSM0nATLp4fpZ8IvQHaznTuvnMo_psc7wS4nqFnxVE4Jf/exec") {
                 showNotification('error', 'Configuration Error', 'Please paste your Google Script URL in the code.');
                 return;
             }
@@ -186,6 +196,7 @@
             
             // Simplified Data Object
             const data = {
+                area: formData.get('area'),
                 tbtTopic: formData.get('tbtTopic'),
                 image: base64Image,
                 mimeType: document.getElementById('photoInput').files[0].type,
