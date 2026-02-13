@@ -45,7 +45,7 @@
 
     <!-- CONFIGURATION AREA -->
     <script>
-        // PASTE YOUR GOOGLE SCRIPT WEB APP URL HERE
+        // UPDATED WITH YOUR SPECIFIC URL
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwfZqbYK4kthRpzE938QymYSM0nATLp4fpZ8IvQHaznTuvnMo_psc7wS4nqFnxVE4Jf/exec"; 
     </script>
 
@@ -172,11 +172,6 @@
         async function submitForm(e) {
             e.preventDefault();
             
-            // Validation
-            if (SCRIPT_URL === "https://script.google.com/macros/s/AKfycbwfZqbYK4kthRpzE938QymYSM0nATLp4fpZ8IvQHaznTuvnMo_psc7wS4nqFnxVE4Jf/exec") {
-                showNotification('error', 'Configuration Error', 'Please paste your Google Script URL in the code.');
-                return;
-            }
             if (!base64Image) {
                 showNotification('error', 'Photo Required', 'Please take or upload a TBT photo.');
                 return;
