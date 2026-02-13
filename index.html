@@ -61,7 +61,7 @@
                 </div>
             </div>
             <h1 class="text-3xl font-bold tracking-tight">TBT Submission</h1>
-            <p class="text-brand-100 mt-1">Daily Safety & Process Log</p>
+            <p class="text-brand-100 mt-1">Daily Safety & Topic Log</p>
         </header>
 
         <!-- Form Section -->
@@ -71,49 +71,24 @@
                 <!-- Card Container -->
                 <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-6 space-y-5">
                     
-                    <!-- GP Process (N2) -->
+                    <!-- TBT Topic (Col O) -->
                     <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">GP Process (N2)</label>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">TBT Topic / Description</label>
                         <div class="relative">
-                            <i class="fas fa-cogs absolute left-3 top-3.5 text-slate-400"></i>
-                            <input type="text" name="gpProcess" required placeholder="e.g. Line Assembly A"
-                                class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all font-medium">
-                        </div>
-                    </div>
-
-                    <!-- Row for Counts -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <!-- Staff Count (N1) -->
-                        <div>
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Staff Count (N1)</label>
-                            <input type="number" name="staffCount" required min="0" placeholder="0"
-                                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 font-bold text-lg text-center text-brand-700">
-                        </div>
-                        
-                        <!-- Absent (N3) -->
-                        <div>
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Absent (N3)</label>
-                            <input type="number" name="absentCount" required min="0" placeholder="0"
-                                class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 font-bold text-lg text-center text-red-600">
-                        </div>
-                    </div>
-
-                    <!-- TBT Topic (N5) -->
-                    <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">TBT Topic (N5)</label>
-                        <textarea name="tbtTopic" required rows="3" placeholder="Enter safety topic details..."
+                             <textarea name="tbtTopic" required rows="4" placeholder="Enter safety topic details here..."
                             class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"></textarea>
+                        </div>
                     </div>
 
                 </div>
 
-                <!-- Photo Upload Section (N6) -->
+                <!-- Photo Upload Section (Col P) -->
                 <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-1 overflow-hidden">
                     <input type="file" id="photoInput" accept="image/*" capture="environment" class="hidden" onchange="previewImage(this)">
                     <label for="photoInput" id="uploadLabel" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-300 rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors">
                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
                             <i class="fas fa-camera-retro text-2xl text-brand-500 mb-2"></i>
-                            <p class="text-sm text-slate-500 font-medium">Tap to take TBT Photo (N6)</p>
+                            <p class="text-sm text-slate-500 font-medium">Tap to take Photo</p>
                         </div>
                     </label>
                     <!-- Preview Area -->
@@ -133,7 +108,7 @@
 
             </form>
             
-            <p class="text-center text-slate-400 text-xs mt-6">Secure Submission System v2.0</p>
+            <p class="text-center text-slate-400 text-xs mt-6">Secure Submission System v4.0</p>
         </main>
     </div>
 
@@ -208,10 +183,9 @@
             loader.classList.remove('hidden');
 
             const formData = new FormData(e.target);
+            
+            // Simplified Data Object
             const data = {
-                staffCount: formData.get('staffCount'),
-                gpProcess: formData.get('gpProcess'),
-                absentCount: formData.get('absentCount'),
                 tbtTopic: formData.get('tbtTopic'),
                 image: base64Image,
                 mimeType: document.getElementById('photoInput').files[0].type,
@@ -219,11 +193,7 @@
             };
 
             try {
-                // We use no-cors to avoid CORS preflight issues with Google Scripts, 
-                // but this means we can't read the response directly.
-                // However, the script is robust enough that we can assume success if no network error.
-                // NOTE: For best UX, we use a specially crafted fetch that expects JSON.
-                
+                // We use no-cors to avoid CORS preflight issues with Google Scripts.
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify(data)
@@ -232,7 +202,7 @@
                 const result = await response.json();
 
                 if (result.status === 'success') {
-                    showNotification('success', 'Submitted!', 'Your TBT report has been saved to the sheet.');
+                    showNotification('success', 'Submitted!', 'Your TBT report has been saved.');
                     document.getElementById('submissionForm').reset();
                     removeImage();
                 } else {
